@@ -1,0 +1,70 @@
+{
+  "name": "@lealt/kaori",
+  "version": "1.0.0",
+  "description": "A feature-rich library for Discord.js.",
+  "author": "Lealt",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/**/*.ts",
+    "prettier": "prettier . --write",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.23.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@types/node": "^24.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "discord.js": "^14.23.2",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "ui",
+    "utils",
+    "components",
+    "builder",
+    "interaction",
+    "discord-bot",
+    "componentsV2",
+    "kaori"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lealtt/kaori.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lealtt/kaori/issues"
+  },
+  "homepage": "https://github.com/lealtt/kaori#readme"
+}
