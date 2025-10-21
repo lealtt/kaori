@@ -1,12 +1,5 @@
-import {
-  GuildMember,
-  PermissionResolvable,
-  User,
-  Role,
-  GuildChannel,
-  ThreadChannel,
-} from "discord.js";
-import type { ChunkResult, PermissionCheckResult, ParsedDuration } from "./types.js";
+import { GuildMember, PermissionResolvable, Role, GuildChannel, ThreadChannel } from "discord.js";
+import type { ChunkResult, PermissionCheckResult, ParsedDuration } from "../types/kaori.js";
 
 /**
  * Chunks an array into smaller arrays of specified size
@@ -213,21 +206,6 @@ export function formatDuration(
   }
 
   return parts.length > 0 ? parts.join(" ") : verbose ? "0 seconds" : "0s";
-}
-
-/**
- * Gets the display name of a user (nickname or username)
- *
- * @example
- * ```ts
- * const name = getDisplayName(member);
- * ```
- */
-export function getDisplayName(memberOrUser: GuildMember | User): string {
-  if (memberOrUser instanceof GuildMember) {
-    return memberOrUser.displayName;
-  }
-  return memberOrUser.displayName || memberOrUser.username;
 }
 
 /**

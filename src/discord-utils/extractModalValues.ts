@@ -1,6 +1,6 @@
 import type { ModalSubmitInteraction, ModalSubmitFields, Channel, Role } from "discord.js";
 import { BaseChannel } from "discord.js";
-import type { ModalSchema, ModalValuesOutput, ModalFieldType } from "./types.js";
+import type { ModalSchema, ModalValuesOutput, ModalFieldType } from "../types/kaori.js";
 
 /**
  * Extracts values from a Discord modal interaction based on a schema.

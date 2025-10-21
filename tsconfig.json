@@ -5,7 +5,6 @@
     "moduleResolution": "nodenext",
     "lib": ["ESNext"],
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "noEmit": true,
     "rootDir": "./src",
     "strict": true,

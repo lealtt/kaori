@@ -16,8 +16,10 @@ import type {
   MediaGalleryItemOptions,
   SectionOptions,
   ThumbnailOptions,
-} from "./types.js";
-import { resolveColor } from "./utils.js";
+} from "../types/kaori.js";
+import { resolveColor } from "../functions/index.js";
+import { colors } from "./constants.js";
+import { randomElement } from "../discord-utils/index.js";
 
 /**
  * Pre-configured separator components for common use cases
@@ -147,10 +149,16 @@ export function container(
   const builder = new ContainerBuilder();
 
   if (accentColor !== undefined) {
-    builder.setAccentColor(resolveColor(accentColor));
+    const resolved = resolveColor(accentColor);
+
+    if (resolved === "Random") {
+      const randomColor = randomElement(Object.values(colors)) ?? 0x5865f2;
+      builder.setAccentColor(randomColor);
+    } else if (resolved !== "Default") {
+      builder.setAccentColor(resolved);
+    }
   }
 
-  // Route each component to the appropriate method
   for (const component of components) {
     if (component instanceof TextDisplayBuilder) {
       builder.addTextDisplayComponents(component);

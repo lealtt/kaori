@@ -1,6 +1,10 @@
-import { EmbedBuilder, resolveColor, type ColorResolvable } from "discord.js";
-import type { EmbedOptions } from "./types.js";
-import { toSnakeCase } from "./utils.js";
+import {
+  EmbedBuilder,
+  resolveColor as discordResolveColor,
+  type ColorResolvable,
+} from "discord.js";
+import type { EmbedOptions } from "../types/kaori.js";
+import { resolveColor, toSnakeCase } from "../functions/index.js";
 
 /**
  * Creates an embed with a fluent, developer-friendly API
@@ -14,33 +18,30 @@ import { toSnakeCase } from "./utils.js";
  *   color: "#5865F2"
  * })
  *
- * // Embed with fields
+ * // Embed with single image
  * embed({
- *   title: "User Info",
- *   fields: [
- *     { name: "Username", value: "John", inline: true },
- *     { name: "ID", value: "123", inline: true }
- *   ]
+ *   title: "Photo",
+ *   image: "url.png"
  * })
  *
  * // Multiple images (returns array of embeds)
  * embed({
  *   title: "Gallery",
- *   images: ["url1.png", "url2.png", "url3.png"]
+ *   image: ["url1.png", "url2.png", "url3.png"]
  * })
  * ```
  */
-export function embed(options: EmbedOptions & { images: string[] }): EmbedBuilder[];
+export function embed(options: EmbedOptions & { image: string[] }): EmbedBuilder[];
 export function embed(options: EmbedOptions): EmbedBuilder;
 export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
-  const { images, color, author, footer, ...rest } = options;
+  const { image, color, author, footer, ...rest } = options;
 
-  // Handle multi-image gallery
-  if (Array.isArray(images) && images.length > 0) {
+  // Handle multi-image gallery (when image is an array)
+  if (Array.isArray(image) && image.length > 0) {
     const embeds: EmbedBuilder[] = [];
     const sharedUrl = rest.url ?? "https://discord.com";
 
-    images.forEach((imageUrl, index) => {
+    image.forEach((imageUrl, index) => {
       const builder = new EmbedBuilder();
 
       // First embed gets all the content
@@ -75,7 +76,7 @@ export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
       builder.setImage(imageUrl);
 
       if (color) {
-        builder.setColor(resolveColor(color) as ColorResolvable);
+        builder.setColor(discordResolveColor(resolveColor(color)) as ColorResolvable);
       }
 
       embeds.push(builder);
@@ -93,10 +94,9 @@ export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
   if (rest.thumbnail) builder.setThumbnail(rest.thumbnail);
   if (rest.fields) builder.addFields(...rest.fields);
 
-  if (typeof images === "string") {
-    builder.setImage(images);
-  } else if (rest.image) {
-    builder.setImage(rest.image);
+  // Handle single image (when image is a string)
+  if (typeof image === "string") {
+    builder.setImage(image);
   }
 
   if (rest.timestamp) {
@@ -121,26 +121,8 @@ export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
   }
 
   if (color) {
-    builder.setColor(resolveColor(color) as ColorResolvable);
+    builder.setColor(discordResolveColor(resolveColor(color)) as ColorResolvable);
   }
 
   return builder;
 }
-
-/**
- * Predefined color palette for quick access
- */
-export const colors = {
-  primary: 0x5865f2,
-  success: 0x57f287,
-  warning: 0xfee75c,
-  danger: 0xed4245,
-  info: 0x3498db,
-  blurple: 0x5865f2,
-  green: 0x57f287,
-  yellow: 0xfee75c,
-  fuchsia: 0xeb459e,
-  red: 0xed4245,
-  white: 0xffffff,
-  black: 0x000000,
-} as const;
