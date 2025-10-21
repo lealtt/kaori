@@ -67,36 +67,26 @@ export function thumbnail(urlOrOptions: string | ThumbnailOptions): ThumbnailBui
 }
 
 /**
- * Creates a section component with text and optional accessory
+ * Creates a section component
  */
-export function section(textOrOptions: string | string[] | SectionOptions): SectionBuilder {
+export function section(options: SectionOptions): SectionBuilder {
   const builder = new SectionBuilder();
 
-  if (typeof textOrOptions === "string") {
-    builder.addTextDisplayComponents(text(textOrOptions));
-    return builder;
-  }
-
-  if (Array.isArray(textOrOptions)) {
-    const displays = textOrOptions.map((t) => text(t));
-    builder.addTextDisplayComponents(...displays);
-    return builder;
-  }
-
-  const { text: textContent, accessory } = textOrOptions;
+  const { text: textContent, accessory } = options;
 
   if (!textContent) throw new Error("Section requires text content");
+  if (!accessory) throw new Error("Section requires an accessory (button or thumbnail)");
 
   const textItems = Array.isArray(textContent) ? textContent : [textContent];
   const displays = textItems.map((t) => text(t));
   builder.addTextDisplayComponents(...displays);
 
-  if (accessory) {
-    if (accessory.button) {
-      builder.setButtonAccessory(accessory.button);
-    } else if (accessory.thumbnail) {
-      builder.setThumbnailAccessory(accessory.thumbnail);
-    }
+  if (accessory.button) {
+    builder.setButtonAccessory(accessory.button);
+  } else if (accessory.thumbnail) {
+    builder.setThumbnailAccessory(accessory.thumbnail);
+  } else {
+    throw new Error("Section accessory must be either a button or thumbnail");
   }
 
   return builder;

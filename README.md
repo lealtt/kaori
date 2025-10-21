@@ -164,7 +164,7 @@ const userEmbed = kui.embed({
 // Image Gallery (returns array of embeds)
 const gallery = kui.embed({
   title: "My Photos",
-  images: [
+  image: [
     "https://example.com/photo1.png",
     "https://example.com/photo2.png",
     "https://example.com/photo3.png",
@@ -395,8 +395,8 @@ const templates = kfeat.templates
     id: "userCard",
     render: (data: { username: string; id: string }) =>
       kui.container.create([
-        kui.container.section(`User: ${data.username}`),
-        kui.container.section(`ID: ${data.id}`),
+        kui.container.text(`User: ${data.username}`),
+        kui.container.text(`ID: ${data.id}`),
       ]),
   });
 

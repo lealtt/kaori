@@ -189,7 +189,7 @@ export interface SectionAccessory {
  */
 export interface SectionOptions {
   text: string | string[];
-  accessory?: SectionAccessory;
+  accessory: SectionAccessory;
 }
 
 /**
