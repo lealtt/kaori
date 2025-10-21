@@ -41,22 +41,26 @@ export type ButtonOptions = {
 /**
  * Options for quick-style buttons
  */
-export interface QuickButtonOptions {
-  customId: string;
-  label: string;
-  disabled?: boolean;
-  emoji?: string | APIMessageComponentEmoji;
-}
+export type QuickButtonOptions =
+  | {
+      customId: string;
+      label: string;
+      disabled?: boolean;
+      emoji?: string | APIMessageComponentEmoji;
+    }
+  | {
+      customId: string;
+      label?: string;
+      disabled?: boolean;
+      emoji: string | APIMessageComponentEmoji;
+    };
 
 /**
  * Options for quick-style link buttons
  */
-export interface QuickLinkButtonOptions {
-  url: string;
-  label: string;
-  disabled?: boolean;
-  emoji?: string | APIMessageComponentEmoji;
-}
+export type QuickLinkButtonOptions =
+  | { url: string; label: string; disabled?: boolean; emoji?: string | APIMessageComponentEmoji }
+  | { url: string; label?: string; disabled?: boolean; emoji: string | APIMessageComponentEmoji };
 
 // ---------- Select Menu Types ----------
 
