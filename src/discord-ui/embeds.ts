@@ -7,6 +7,50 @@ import type { EmbedOptions } from "../types/kaori.js";
 import { resolveColor, toSnakeCase } from "../functions/index.js";
 
 /**
+ * Applies common embed properties to an EmbedBuilder
+ * @internal
+ */
+function applyEmbedProperties(
+  builder: EmbedBuilder,
+  options: Omit<EmbedOptions, "image">,
+): EmbedBuilder {
+  const { color, author, footer, title, description, url, thumbnail, fields, timestamp } = options;
+
+  if (title) builder.setTitle(title);
+  if (description) builder.setDescription(description);
+  if (url) builder.setURL(url);
+  if (thumbnail) builder.setThumbnail(thumbnail);
+  if (fields) builder.addFields(...fields);
+
+  if (timestamp) {
+    const ts = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    builder.setTimestamp(ts);
+  }
+
+  if (author) {
+    if (typeof author === "string") {
+      builder.setAuthor({ name: author });
+    } else {
+      builder.setAuthor(toSnakeCase(author));
+    }
+  }
+
+  if (footer) {
+    if (typeof footer === "string") {
+      builder.setFooter({ text: footer });
+    } else {
+      builder.setFooter(toSnakeCase(footer));
+    }
+  }
+
+  if (color) {
+    builder.setColor(discordResolveColor(resolveColor(color)) as ColorResolvable);
+  }
+
+  return builder;
+}
+
+/**
  * Creates an embed with a fluent, developer-friendly API
  *
  * @example
@@ -34,7 +78,7 @@ import { resolveColor, toSnakeCase } from "../functions/index.js";
 export function embed(options: EmbedOptions & { image: string[] }): EmbedBuilder[];
 export function embed(options: EmbedOptions): EmbedBuilder;
 export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
-  const { image, color, author, footer, ...rest } = options;
+  const { image, ...rest } = options;
 
   // Handle multi-image gallery (when image is an array)
   if (Array.isArray(image) && image.length > 0) {
@@ -46,39 +90,16 @@ export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
 
       // First embed gets all the content
       if (index === 0) {
-        if (rest.title) builder.setTitle(rest.title);
-        if (rest.description) builder.setDescription(rest.description);
-        if (rest.fields) builder.addFields(...rest.fields);
-        if (rest.timestamp) {
-          const timestamp =
-            rest.timestamp instanceof Date ? rest.timestamp : new Date(rest.timestamp);
-          builder.setTimestamp(timestamp);
-        }
-
-        if (author) {
-          if (typeof author === "string") {
-            builder.setAuthor({ name: author });
-          } else {
-            builder.setAuthor(toSnakeCase(author));
-          }
-        }
-
-        if (footer) {
-          if (typeof footer === "string") {
-            builder.setFooter({ text: footer });
-          } else {
-            builder.setFooter(toSnakeCase(footer));
-          }
+        applyEmbedProperties(builder, rest);
+      } else {
+        // Subsequent embeds only get color
+        if (rest.color) {
+          builder.setColor(discordResolveColor(resolveColor(rest.color)) as ColorResolvable);
         }
       }
 
       builder.setURL(sharedUrl);
       builder.setImage(imageUrl);
-
-      if (color) {
-        builder.setColor(discordResolveColor(resolveColor(color)) as ColorResolvable);
-      }
-
       embeds.push(builder);
     });
 
@@ -87,41 +108,11 @@ export function embed(options: EmbedOptions): EmbedBuilder | EmbedBuilder[] {
 
   // Single embed
   const builder = new EmbedBuilder();
-
-  if (rest.title) builder.setTitle(rest.title);
-  if (rest.description) builder.setDescription(rest.description);
-  if (rest.url) builder.setURL(rest.url);
-  if (rest.thumbnail) builder.setThumbnail(rest.thumbnail);
-  if (rest.fields) builder.addFields(...rest.fields);
+  applyEmbedProperties(builder, rest);
 
   // Handle single image (when image is a string)
   if (typeof image === "string") {
     builder.setImage(image);
-  }
-
-  if (rest.timestamp) {
-    const timestamp = rest.timestamp instanceof Date ? rest.timestamp : new Date(rest.timestamp);
-    builder.setTimestamp(timestamp);
-  }
-
-  if (author) {
-    if (typeof author === "string") {
-      builder.setAuthor({ name: author });
-    } else {
-      builder.setAuthor(toSnakeCase(author));
-    }
-  }
-
-  if (footer) {
-    if (typeof footer === "string") {
-      builder.setFooter({ text: footer });
-    } else {
-      builder.setFooter(toSnakeCase(footer));
-    }
-  }
-
-  if (color) {
-    builder.setColor(discordResolveColor(resolveColor(color)) as ColorResolvable);
   }
 
   return builder;

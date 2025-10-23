@@ -1,4 +1,14 @@
-import { ModalBuilder, TextInputBuilder, TextInputStyle, LabelBuilder } from "discord.js";
+import {
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  LabelBuilder,
+  StringSelectMenuBuilder,
+  UserSelectMenuBuilder,
+  RoleSelectMenuBuilder,
+  ChannelSelectMenuBuilder,
+  MentionableSelectMenuBuilder,
+} from "discord.js";
 import type { TextInputOptions, ModalOptions, LabelOptions } from "../types/kaori.js";
 
 /**
@@ -34,19 +44,19 @@ export function label(options: LabelOptions): LabelBuilder {
     builder.setDescription(options.description);
   }
 
-  // Route component to appropriate setter
-  if ("setOptions" in options.component) {
-    builder.setStringSelectMenuComponent(options.component as any);
-  } else if ("setDefaultUsers" in options.component) {
-    builder.setUserSelectMenuComponent(options.component as any);
-  } else if ("setDefaultRoles" in options.component) {
-    builder.setRoleSelectMenuComponent(options.component as any);
-  } else if ("setDefaultChannels" in options.component) {
-    builder.setChannelSelectMenuComponent(options.component as any);
-  } else if ("setStyle" in options.component) {
-    builder.setTextInputComponent(options.component as any);
-  } else {
-    builder.setMentionableSelectMenuComponent(options.component as any);
+  // Route component to appropriate setter using instanceof (type-safe)
+  if (options.component instanceof StringSelectMenuBuilder) {
+    builder.setStringSelectMenuComponent(options.component);
+  } else if (options.component instanceof UserSelectMenuBuilder) {
+    builder.setUserSelectMenuComponent(options.component);
+  } else if (options.component instanceof RoleSelectMenuBuilder) {
+    builder.setRoleSelectMenuComponent(options.component);
+  } else if (options.component instanceof ChannelSelectMenuBuilder) {
+    builder.setChannelSelectMenuComponent(options.component);
+  } else if (options.component instanceof MentionableSelectMenuBuilder) {
+    builder.setMentionableSelectMenuComponent(options.component);
+  } else if (options.component instanceof TextInputBuilder) {
+    builder.setTextInputComponent(options.component);
   }
 
   return builder;
@@ -63,11 +73,11 @@ export function modal(options: ModalOptions): ModalBuilder {
   const builder = new ModalBuilder().setCustomId(options.customId).setTitle(options.title);
 
   const labelComponents: LabelBuilder[] = [];
-  const textDisplayComponents: any[] = [];
+  const textDisplayComponents: import("discord.js").TextDisplayBuilder[] = [];
 
   for (const component of options.components) {
-    if (component.constructor.name === "LabelBuilder") {
-      labelComponents.push(component as LabelBuilder);
+    if (component instanceof LabelBuilder) {
+      labelComponents.push(component);
     } else {
       textDisplayComponents.push(component);
     }

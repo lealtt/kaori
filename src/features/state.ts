@@ -141,6 +141,76 @@ class KaoriStateStore<T> implements StateStore<T> {
   }
 
   /**
+   * Get or set a value (lazy initialization)
+   * If the key exists, returns the value. Otherwise, calls factory and stores the result.
+   *
+   * @example
+   * ```ts
+   * const user = userState.getOrSet('123', () => ({ username: 'default' }));
+   * ```
+   */
+  public getOrSet(key: string, factory: () => T, customTTL?: number): T {
+    const existing = this.get(key);
+    if (existing !== undefined) return existing;
+
+    const value = factory();
+    this.set(key, value, customTTL);
+    return value;
+  }
+
+  /**
+   * Refresh TTL without reading the value
+   * Updates the expiration time and last accessed time
+   *
+   * @returns true if key exists and was refreshed, false otherwise
+   *
+   * @example
+   * ```ts
+   * // Extend user session without reading data
+   * userState.touch('123456789');
+   * ```
+   */
+  public touch(key: string, customTTL?: number): boolean {
+    const entry = this.store.get(key);
+    if (!entry) return false;
+
+    if (Date.now() > entry.expiresAt) {
+      this.delete(key);
+      return false;
+    }
+
+    const ttl = customTTL ?? this.options.ttl;
+    entry.lastAccessed = Date.now();
+    entry.expiresAt = Date.now() + ttl;
+    return true;
+  }
+
+  /**
+   * Get statistics about the state store
+   *
+   * @example
+   * ```ts
+   * const stats = userState.getStats();
+   * console.log(`Store utilization: ${stats.utilization.toFixed(1)}%`);
+   * ```
+   */
+  public getStats(): {
+    size: number;
+    maxSize: number;
+    utilization: number;
+    ttl: number;
+    id: string;
+  } {
+    return {
+      size: this.store.size,
+      maxSize: this.options.maxSize,
+      utilization: (this.store.size / this.options.maxSize) * 100,
+      ttl: this.options.ttl,
+      id: this.options.id,
+    };
+  }
+
+  /**
    * Evicts the least recently used entry
    */
   private evictLRU(): void {

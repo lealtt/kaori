@@ -4,9 +4,7 @@ import {
   RoleSelectMenuBuilder,
   ChannelSelectMenuBuilder,
   MentionableSelectMenuBuilder,
-  BaseSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
-  type APISelectMenuComponent,
 } from "discord.js";
 import type { QuickStringMenuOptions, SelectMenuOptions } from "../types/kaori.js";
 
@@ -14,8 +12,13 @@ import type { QuickStringMenuOptions, SelectMenuOptions } from "../types/kaori.j
  * Local helper to apply common SelectMenuOptions
  */
 function applyCommonMenuOptions<
-  SelectMenuType extends APISelectMenuComponent,
-  T extends BaseSelectMenuBuilder<SelectMenuType>,
+  T extends {
+    setPlaceholder: (value: string) => T;
+    setMinValues: (value: number) => T;
+    setMaxValues: (value: number) => T;
+    setDisabled: (value: boolean) => T;
+    setRequired: (value: boolean) => T;
+  },
 >(builder: T, options: SelectMenuOptions): T {
   if (options.placeholder) builder.setPlaceholder(options.placeholder);
   if (options.minValues) builder.setMinValues(options.minValues);

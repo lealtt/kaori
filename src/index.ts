@@ -112,6 +112,50 @@ export const kut = {
     channelId: utilsExports.resolveChannelId,
   },
   /**
+   * Category: Formatters
+   * Functions to format mentions and timestamps.
+   */
+  formatters: {
+    userMention: utilsExports.formatUserMention,
+    roleMention: utilsExports.formatRoleMention,
+    channelMention: utilsExports.formatChannelMention,
+    timestamp: utilsExports.formatTimestamp,
+    customEmoji: utilsExports.formatCustomEmoji,
+  },
+  /**
+   * Category: Type Guards
+   * Type guard utilities for Discord objects.
+   */
+  guards: {
+    isTextChannel: utilsExports.isTextChannel,
+    isVoiceChannel: utilsExports.isVoiceChannel,
+    isCategoryChannel: utilsExports.isCategoryChannel,
+    isStageChannel: utilsExports.isStageChannel,
+    isForumChannel: utilsExports.isForumChannel,
+    isThreadChannel: utilsExports.isThreadChannel,
+    isDMChannel: utilsExports.isDMChannel,
+    isGuildChannel: utilsExports.isGuildChannel,
+    isGuildInteraction: utilsExports.isGuildInteraction,
+    isBot: utilsExports.isBot,
+    isAdmin: utilsExports.isAdmin,
+    isOwner: utilsExports.isOwner,
+    isModerator: utilsExports.isModerator,
+  },
+  /**
+   * Category: Validators
+   * Validation functions for Discord data.
+   */
+  validators: {
+    isValidDiscordId: utilsExports.isValidDiscordId,
+    isValidHexColor: utilsExports.isValidHexColor,
+    validateEmbedField: utilsExports.validateEmbedField,
+    validateEmbed: utilsExports.validateEmbed,
+    isValidButtonLabel: utilsExports.isValidButtonLabel,
+    isValidSelectOption: utilsExports.isValidSelectOption,
+    isValidModalTitle: utilsExports.isValidModalTitle,
+    isValidTextInputLabel: utilsExports.isValidTextInputLabel,
+  },
+  /**
    * Category: Member/User Helpers
    * Utilities for getting info from GuildMembers or Users.
    */
@@ -183,6 +227,25 @@ export const kfeat = {
   timer: {
     create: featuresExports.timer,
   },
+  /**
+   * Category: Cooldown
+   * Creates a new cooldown manager for rate limiting.
+   * (ex: kfeat.cooldown.create())
+   */
+  cooldown: {
+    create: featuresExports.cooldown,
+  },
 };
 
 export type * from "./types/kaori.js";
+
+// Export error classes for users who want to catch specific errors
+export {
+  KaoriError,
+  TemplateNotFoundError,
+  ValidationError,
+  PermissionError,
+  CooldownError,
+  StateError,
+  QueueError,
+} from "./discord-utils/errors.js";

@@ -106,6 +106,71 @@ export class Queue<T> {
   }
 
   /**
+   * Enqueue multiple items at once
+   * @param items Array of items to add to the queue
+   *
+   * @example
+   * ```ts
+   * const queue = new Queue<number>();
+   * queue.enqueueAll([1, 2, 3, 4, 5]);
+   * ```
+   */
+  public enqueueAll(items: T[]): void {
+    items.forEach((item) => this.enqueue(item));
+  }
+
+  /**
+   * Dequeue multiple items
+   * @param count Number of items to dequeue
+   * @returns Array of dequeued items (may be less than count if queue is smaller)
+   *
+   * @example
+   * ```ts
+   * const batch = queue.dequeueMultiple(5);
+   * console.log(`Processed ${batch.length} items`);
+   * ```
+   */
+  public dequeueMultiple(count: number): T[] {
+    const result: T[] = [];
+    for (let i = 0; i < count && !this.isEmpty(); i++) {
+      const item = this.dequeue();
+      if (item !== undefined) result.push(item);
+    }
+    return result;
+  }
+
+  /**
+   * Drain the queue by processing all items with a callback
+   * @param callback Function to call for each item
+   *
+   * @example
+   * ```ts
+   * queue.drain((item) => {
+   *   console.log(`Processing: ${item}`);
+   * });
+   * ```
+   */
+  public drain(callback: (item: T) => void): void {
+    while (!this.isEmpty()) {
+      const item = this.dequeue();
+      if (item !== undefined) callback(item);
+    }
+  }
+
+  /**
+   * Get current capacity of the queue
+   * @returns Current capacity
+   *
+   * @example
+   * ```ts
+   * console.log(`Queue capacity: ${queue.getCapacity()}`);
+   * ```
+   */
+  public getCapacity(): number {
+    return this.capacity;
+  }
+
+  /**
    * Doubles the capacity of the queue.
    */
   private grow(): void {
