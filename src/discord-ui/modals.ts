@@ -10,7 +10,12 @@ import {
   MentionableSelectMenuBuilder,
   FileUploadBuilder,
 } from "discord.js";
-import type { TextInputOptions, ModalOptions, LabelOptions, FileUploadOptions } from "../types/kaori.js";
+import type {
+  TextInputOptions,
+  ModalOptions,
+  LabelOptions,
+  FileUploadOptions,
+} from "../types/kaori.js";
 
 /**
  * Creates a text input wrapped in a LabelBuilder for use in modals

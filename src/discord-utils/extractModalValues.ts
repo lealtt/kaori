@@ -1,4 +1,10 @@
-import type { ModalSubmitInteraction, ModalSubmitFields, Channel, Role, Attachment } from "discord.js";
+import type {
+  ModalSubmitInteraction,
+  ModalSubmitFields,
+  Channel,
+  Role,
+  Attachment,
+} from "discord.js";
 import { BaseChannel } from "discord.js";
 import type { ModalSchema, ModalValuesOutput, ModalFieldType } from "../types/kaori.js";
 
@@ -101,7 +107,9 @@ function extractField(fields: ModalSubmitFields, customId: string, type: ModalFi
 
       case "files": {
         const attachments = fields.getUploadedFiles(customId);
-        return attachments ? Array.from(attachments.values()).filter((a): a is Attachment => a !== null) : [];
+        return attachments
+          ? Array.from(attachments.values()).filter((a): a is Attachment => a !== null)
+          : [];
       }
 
       default:

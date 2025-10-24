@@ -234,7 +234,14 @@ export interface ThumbnailOptions {
 /**
  * Field types that can be extracted from modals
  */
-export type ModalFieldType = "text" | "strings" | "users" | "roles" | "channels" | "mentionables" | "files";
+export type ModalFieldType =
+  | "text"
+  | "strings"
+  | "users"
+  | "roles"
+  | "channels"
+  | "mentionables"
+  | "files";
 
 /**
  * Output types for each modal field type
