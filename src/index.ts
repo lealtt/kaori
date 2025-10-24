@@ -55,6 +55,8 @@ export const kui = {
     create: uiExports.modal,
     /** Creates a TextInput (ex: kui.modal.input(...)) */
     input: uiExports.textInput,
+    /** Creates a FileUpload (ex: kui.modal.fileUpload(...)) */
+    fileUpload: uiExports.fileUpload,
     /** Creates a Label (ex: kui.modal.label(...)) */
     label: uiExports.label,
   },

@@ -5,6 +5,7 @@ import type {
   User,
   Role,
   Channel,
+  Attachment,
 } from "discord.js";
 
 // ==================== UI TYPES ====================
@@ -111,6 +112,18 @@ export interface TextInputOptions {
 }
 
 /**
+ * Options for file upload in modal
+ */
+export interface FileUploadOptions {
+  customId: string;
+  label: string;
+  description?: string;
+  minValues?: number;
+  maxValues?: number;
+  required?: boolean;
+}
+
+/**
  * Options for creating a modal
  */
 export interface ModalOptions {
@@ -131,7 +144,8 @@ export interface LabelOptions {
     | import("discord.js").RoleSelectMenuBuilder
     | import("discord.js").ChannelSelectMenuBuilder
     | import("discord.js").MentionableSelectMenuBuilder
-    | import("discord.js").TextInputBuilder;
+    | import("discord.js").TextInputBuilder
+    | import("discord.js").FileUploadBuilder;
 }
 
 // ---------- Embed Types ----------
@@ -220,7 +234,7 @@ export interface ThumbnailOptions {
 /**
  * Field types that can be extracted from modals
  */
-export type ModalFieldType = "text" | "strings" | "users" | "roles" | "channels" | "mentionables";
+export type ModalFieldType = "text" | "strings" | "users" | "roles" | "channels" | "mentionables" | "files";
 
 /**
  * Output types for each modal field type
@@ -232,6 +246,7 @@ export interface ModalFieldTypeOutput {
   roles: Role[];
   channels: Channel[];
   mentionables: (User | Role)[];
+  files: Attachment[];
 }
 
 /**

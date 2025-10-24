@@ -1,4 +1,4 @@
-import type { ModalSubmitInteraction, ModalSubmitFields, Channel, Role } from "discord.js";
+import type { ModalSubmitInteraction, ModalSubmitFields, Channel, Role, Attachment } from "discord.js";
 import { BaseChannel } from "discord.js";
 import type { ModalSchema, ModalValuesOutput, ModalFieldType } from "../types/kaori.js";
 
@@ -24,6 +24,15 @@ import type { ModalSchema, ModalValuesOutput, ModalFieldType } from "../types/ka
  *   roles: ["staff-apply/roles", "roles"]
  * });
  * // Returns: { tags: string[], roles: Role[] }
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Usage with file uploads
+ * const { documents } = extractModalValues(interaction, {
+ *   documents: ["form/documents", "files"]
+ * });
+ * // Returns: { documents: Attachment[] }
  * ```
  *
  * @param interaction The ModalSubmitInteraction to extract values from
@@ -88,6 +97,11 @@ function extractField(fields: ModalSubmitFields, customId: string, type: ModalFi
           ...Array.from(mentionables.users.values()).filter(Boolean),
           ...Array.from(mentionables.roles.values()).filter((r): r is Role => r !== null),
         ];
+      }
+
+      case "files": {
+        const attachments = fields.getUploadedFiles(customId);
+        return attachments ? Array.from(attachments.values()).filter((a): a is Attachment => a !== null) : [];
       }
 
       default:

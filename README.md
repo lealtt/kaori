@@ -201,6 +201,110 @@ const feedbackModal = kui.modal.create({
 await interaction.showModal(feedbackModal);
 ```
 
+##### File Upload in Modals
+
+Add file upload components to your modals:
+
+```typescript
+// Simple file upload modal
+const uploadModal = kui.modal.create({
+  customId: "upload_modal",
+  title: "Upload Files",
+  components: [
+    kui.modal.fileUpload({
+      customId: "attachment",
+      label: "Select File",
+      required: true,
+    }),
+  ],
+});
+
+await interaction.showModal(uploadModal);
+```
+
+##### Combined Text Inputs and File Uploads
+
+Mix text inputs with file uploads in the same modal:
+
+```typescript
+const reportModal = kui.modal.create({
+  customId: "bug_report",
+  title: "Bug Report",
+  components: [
+    kui.modal.input({
+      customId: "bug_title",
+      label: "Bug Title",
+      placeholder: "Brief description of the issue",
+      required: true,
+    }),
+    kui.modal.input({
+      customId: "bug_description",
+      label: "Description",
+      style: kres.styles.input.paragraph,
+      placeholder: "Detailed explanation...",
+    }),
+    kui.modal.fileUpload({
+      customId: "screenshots",
+      label: "Screenshots",
+      description: "Upload screenshots or logs",
+      minValues: 1,
+      maxValues: 5,
+      required: false,
+    }),
+  ],
+});
+
+await interaction.showModal(reportModal);
+```
+
+##### Advanced File Upload Options
+
+Use all available file upload options:
+
+```typescript
+const submissionModal = kui.modal.create({
+  customId: "project_submission",
+  title: "Project Submission",
+  components: [
+    kui.modal.input({
+      customId: "project_name",
+      label: "Project Name",
+      required: true,
+    }),
+    kui.modal.fileUpload({
+      customId: "project_files",
+      label: "Project Files",
+      description: "Upload 2-10 files related to your project",
+      minValues: 2,
+      maxValues: 10,
+      required: true,
+    }),
+  ],
+});
+
+await interaction.showModal(submissionModal);
+
+// Extract uploaded files from modal submission
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isModalSubmit()) return;
+
+  if (interaction.customId === "project_submission") {
+    const { projectName, files } = kut.interaction.extractModalValues(interaction, {
+      projectName: "project_name",
+      files: ["project_files", "files"],
+    });
+
+    console.log("Project:", projectName); // string
+    console.log("Files:", files); // Attachment[]
+
+    await interaction.reply({
+      content: `Received ${files.length} file(s) for project: ${projectName}`,
+      flags: "Ephemeral",
+    });
+  }
+});
+```
+
 #### V2 Components (Containers)
 
 Build rich V2 component messages:

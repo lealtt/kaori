@@ -8,8 +8,9 @@ import {
   RoleSelectMenuBuilder,
   ChannelSelectMenuBuilder,
   MentionableSelectMenuBuilder,
+  FileUploadBuilder,
 } from "discord.js";
-import type { TextInputOptions, ModalOptions, LabelOptions } from "../types/kaori.js";
+import type { TextInputOptions, ModalOptions, LabelOptions, FileUploadOptions } from "../types/kaori.js";
 
 /**
  * Creates a text input wrapped in a LabelBuilder for use in modals
@@ -29,6 +30,28 @@ export function textInput(options: TextInputOptions): LabelBuilder {
   if (options.value) input.setValue(options.value);
 
   return new LabelBuilder().setLabel(options.label).setTextInputComponent(input);
+}
+
+/**
+ * Creates a file upload wrapped in a LabelBuilder for use in modals
+ */
+export function fileUpload(options: FileUploadOptions): LabelBuilder {
+  if (!options.customId) throw new Error("File upload requires a customId");
+  if (!options.label) throw new Error("File upload requires a label");
+
+  const upload = new FileUploadBuilder().setCustomId(options.customId);
+
+  if (options.minValues !== undefined) upload.setMinValues(options.minValues);
+  if (options.maxValues !== undefined) upload.setMaxValues(options.maxValues);
+  if (options.required !== undefined) upload.setRequired(options.required);
+
+  const builder = new LabelBuilder().setLabel(options.label).setFileUploadComponent(upload);
+
+  if (options.description) {
+    builder.setDescription(options.description);
+  }
+
+  return builder;
 }
 
 /**
@@ -57,6 +80,8 @@ export function label(options: LabelOptions): LabelBuilder {
     builder.setMentionableSelectMenuComponent(options.component);
   } else if (options.component instanceof TextInputBuilder) {
     builder.setTextInputComponent(options.component);
+  } else if (options.component instanceof FileUploadBuilder) {
+    builder.setFileUploadComponent(options.component);
   }
 
   return builder;
